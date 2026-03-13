@@ -472,9 +472,70 @@
   @media (max-width: 768px) {
     nav { padding: 1rem 1.5rem; }
     .nav-links { display: none; }
-    .section-wrap { padding: 4rem 1.5rem; }
-    .about-grid, .contact-layout { grid-template-columns: 1fr; }
+    .section-wrap { padding: 3rem 1.2rem; }
+    .about-grid, .contact-layout { grid-template-columns: 1fr; gap: 2rem; }
     footer { flex-direction: column; gap: 1rem; text-align: center; }
+
+    /* Skills — 1 column on mobile */
+    .skills-container { grid-template-columns: 1fr; gap: 1rem; }
+
+    /* Projects — 1 column on mobile */
+    .projects-grid { grid-template-columns: 1fr; gap: 1rem; }
+
+    /* Certs — 1 column on mobile */
+    .certs-grid { grid-template-columns: 1fr; gap: 1rem; }
+
+    /* CTF grid — 2 columns on mobile */
+    .ctf-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+    /* Disable 3D scroll transforms on mobile — causes overflow issues */
+    .skill-card-3d,
+    .project-card,
+    .cert-card {
+      transform: none !important;
+      opacity: 1 !important;
+    }
+
+    /* Hero text sizing */
+    .hero-name { font-size: clamp(2rem, 12vw, 4rem) !important; letter-spacing: 4px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 3px; }
+    .hero-sub { font-size: 11px; letter-spacing: 2px; }
+    .hero-cta { flex-direction: column; align-items: center; gap: 0.75rem; }
+
+    /* Section titles */
+    .section-title { font-size: clamp(1.2rem, 6vw, 2rem); }
+
+    /* About stats — 2 columns */
+    .about-stats { grid-template-columns: 1fr 1fr; }
+
+    /* Boot terminal */
+    .boot-terminal { padding: 1.25rem; }
+    .boot-line { font-size: 11px; }
+
+    /* Live terminal */
+    #live-terminal { font-size: 11px; overflow-x: auto; }
+
+    /* Disable custom cursor on touch devices */
+    #cursor-pointer { display: none; }
+
+    /* Contact form full width */
+    .contact-layout { grid-template-columns: 1fr; }
+    .form-group textarea { height: 80px; }
+
+    /* Scroll indicator hide on small screens */
+    .scroll-indicator { display: none; }
+  }
+
+  @media (max-width: 480px) {
+    .section-wrap { padding: 2.5rem 1rem; }
+    .skills-container { grid-template-columns: 1fr; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .ctf-grid { grid-template-columns: 1fr 1fr; }
+    .about-stats { grid-template-columns: 1fr 1fr; }
+    .stat-num { font-size: 1.5rem; }
+    .hero-cta .btn { width: 100%; text-align: center; }
+    .boot-terminal { padding: 1rem; }
+    footer { padding: 1.5rem 1rem; }
   }
 </style>
 </head>
@@ -1241,8 +1302,9 @@ window.addEventListener('load', function() {
 })();
 
 // ============================================================
-// 3D TILT ON CARDS (mouse parallax)
+// 3D TILT ON CARDS (mouse parallax) — desktop only
 // ============================================================
+if (window.innerWidth >= 768) {
 document.querySelectorAll('.skill-card-3d, .project-card, .cert-card, .ctf-card').forEach(card => {
   card.addEventListener('mousemove', e => {
     const rect = card.getBoundingClientRect();
@@ -1258,6 +1320,7 @@ document.querySelectorAll('.skill-card-3d, .project-card, .cert-card, .ctf-card'
     card.style.boxShadow = '';
   });
 });
+} // end desktop-only tilt
 
 // ============================================================
 // SCROLL-TRIGGERED COUNTER ANIMATION
@@ -1292,6 +1355,7 @@ document.querySelectorAll('.stat-card').forEach(c => statsObserver.observe(c));
 // PARALLAX DEPTH ON SCROLL
 // ============================================================
 window.addEventListener('scroll', () => {
+  if (window.innerWidth < 768) return; // skip on mobile
   const scrollY = window.scrollY;
   // Section headers subtle parallax
   document.querySelectorAll('.section-header').forEach((el, i) => {
